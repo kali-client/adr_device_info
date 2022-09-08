@@ -1,3 +1,3 @@
 # adr_device_info
 
-get android device infomation~
+get android device information~
