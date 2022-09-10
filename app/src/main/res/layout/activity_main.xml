@@ -4,7 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.android.device.MainActivity">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:background="#2196F3"
+        android:onClick="getDeviceInfo"
+        android:text="获取设备信息"
+        android:textSize="16dp" />
 
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="deviceInfo..."
+        android:padding="16dp" />
 </LinearLayout>

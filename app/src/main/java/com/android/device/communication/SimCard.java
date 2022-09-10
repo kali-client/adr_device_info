@@ -9,7 +9,6 @@ import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 
-
 import androidx.core.app.ActivityCompat;
 
 import com.android.device.UApplication;

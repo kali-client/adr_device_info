@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-public class Storage {
+public final class Storage {
     public static JSONObject getMemInfo() {
         JSONObject jsonObject = new JSONObject();
         try {

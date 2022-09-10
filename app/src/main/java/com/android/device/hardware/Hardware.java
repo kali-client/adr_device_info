@@ -1,11 +1,15 @@
 package com.android.device.hardware;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 
+import com.android.device.UApplication;
+import com.android.device.utils.ULog;
 
 import org.json.JSONObject;
 
@@ -20,11 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
-import static android.content.Context.SENSOR_SERVICE;
-
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
 
 public final class Hardware {
 

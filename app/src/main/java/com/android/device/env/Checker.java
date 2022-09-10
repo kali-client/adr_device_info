@@ -1,10 +1,8 @@
 package com.android.device.env;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
@@ -14,8 +12,6 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Debug;
 import android.text.TextUtils;
-
-import androidx.core.app.ActivityCompat;
 
 import com.android.device.UApplication;
 import com.android.device.utils.Cmd;
