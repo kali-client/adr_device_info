@@ -1,4 +1,4 @@
-package com.android.device.net;
+package com.android.device.communication;
 
 import android.Manifest;
 import android.content.Context;
