@@ -1,7 +1,5 @@
 package com.android.device.utils;
 
-import com.qunar.rc.d.Constants;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -125,9 +123,9 @@ public final class Cmd {
             }
             return sb.toString();
         } catch (Exception e) {
-            Log.e(e);
+            ULog.e(e);
         }
-        return Constants.DEFAULT_STR;
+        return "";
     }
 
 }

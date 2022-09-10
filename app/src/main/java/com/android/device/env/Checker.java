@@ -105,11 +105,9 @@ final class Checker {
                 if (ba == null) {
                     suspectCount++;
                 } else {
-                    if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        String name = ba.getName();
-                        if (TextUtils.isEmpty(name)) {
-                            suspectCount++;
-                        }
+                    String name = ba.getName();
+                    if (TextUtils.isEmpty(name)) {
+                        suspectCount++;
                     }
 
                 }
