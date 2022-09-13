@@ -1,10 +1,16 @@
 package com.android.device.software;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.provider.MediaStore;
+
+import androidx.core.content.ContextCompat;
 
 import com.android.device.UApplication;
 import com.android.device.utils.MD5;
@@ -15,6 +21,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public final class Media {
 
@@ -203,6 +212,38 @@ public final class Media {
         return jsonObject;
     }
 
+    public static Map<String, String> getPhotoInfo(){
+        // 相册信息
+        if (ContextCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        try{
+            Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            String[] projection = {MediaStore.Images.Media._ID
+                    , MediaStore.Images.Media.DATE_MODIFIED
+            };
+            Cursor cursor = UApplication.getContext().getContentResolver().query(imageUri,
+                    projection,
+                    MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
+                    new String[]{"image/jpeg", "image/png"},
+                    MediaStore.Images.Media.DATE_MODIFIED + " DESC");
+            Map<String, String> photoMap = null;
+            if (cursor != null) {
+                photoMap = new HashMap<>();
+                if (cursor.moveToFirst()) {
+                    photoMap.put("photo_count", cursor.getCount() + "");
+                    @SuppressLint("Range") long dateModified = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED)) * 1000;
+                    String dateModifiedString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date(dateModified));
+                    photoMap.put("photo_last_date", dateModifiedString);
+                }
+                cursor.close();
+            }
+            return photoMap;
+        } catch (Throwable e){
+        }
+        return null;
+    }
+
 
     public static JSONObject getMediaInfo() {
         JSONObject jsonObject = new JSONObject();
@@ -211,6 +252,7 @@ public final class Media {
             jsonObject.put("volume", getVolume());
             jsonObject.put("imageCount", getImageCount());
             jsonObject.put("imageList", getImageList());
+            jsonObject.put("photoInfo", getPhotoInfo());
             jsonObject.put("videoList", getVideoList());
         } catch (Throwable e) {
             ULog.e(e);

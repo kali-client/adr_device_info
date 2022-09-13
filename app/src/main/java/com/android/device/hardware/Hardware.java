@@ -17,13 +17,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 
 public final class Hardware {
 
@@ -72,7 +69,6 @@ public final class Hardware {
         return jsonObject;
     }
 
-
     public static String getFeatures() {
         try {
             StringBuffer buffer = new StringBuffer();
@@ -112,76 +108,6 @@ public final class Hardware {
         }
         return "";
     }
-
-    public static String getLibraries() {
-        try {
-            StringBuffer buffer = new StringBuffer();
-            final List<String> list = new ArrayList<String>();
-            PackageManager pm = UApplication.getContext().getPackageManager();
-            final String[] rawList = pm.getSystemSharedLibraryNames();
-            for (int i = 0; i < rawList.length; i++) {
-                list.add(rawList[i]);
-            }
-            // sort by name
-            Collections.sort(list, new Comparator<String>() {
-                public int compare(String o1, String o2) {
-                    if (o1 == o2) return 0;
-                    if (o1 == null) return -1;
-                    if (o2 == null) return 1;
-                    return o1.compareTo(o2);
-                }
-            });
-
-            final int count = (list != null) ? list.size() : 0;
-            for (int p = 0; p < count; p++) {
-                String lib = list.get(p);
-                buffer.append("library:");
-                buffer.append(lib).append("\n");
-            }
-            return buffer.toString();
-        } catch (Throwable e) {
-            ULog.e(e);
-        }
-        return "";
-    }
-
-    public static JSONObject getJavaProperties() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            Properties prop = System.getProperties();
-            Set<String> keySets = prop.stringPropertyNames();
-            for (String key : keySets) {
-                jsonObject.put(key, prop.getProperty(key));
-            }
-        } catch (Throwable e) {
-            ULog.e(e);
-        }
-        return jsonObject;
-    }
-
-    public static JSONObject getBuildInfo() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            Field[] fields = Build.class.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                jsonObject.put(field.getName(), String.valueOf(field.get(null)));
-            }
-        } catch (Throwable e) {
-            ULog.e(e);
-        }
-        try {
-            Field[] fields = Build.VERSION.class.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                jsonObject.put(field.getName(), String.valueOf(field.get(null)));
-            }
-        } catch (Throwable e) {
-            ULog.e(e);
-        }
-        return jsonObject;
-    }
-
 
     public static String getCpuName() {
         String valueStr;
