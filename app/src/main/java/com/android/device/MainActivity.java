@@ -33,5 +33,6 @@ public class MainActivity extends Activity {
 //        tvInfo.setText("hasSimCard:"+SimCard.hasSimCard() + "\n hasIccCard:" + SimCard.hasIccCard() + "\nSimOperator:" + SimCard.getSimOperator() + "\nSimSerialNumber:"+ IDs.getSimSerialNumber());
 //        tvInfo.setText(SimCard.getGSMInfo().toString());
 //        tvInfo.setText(Build.getBuildInfo().toString());
+        tvInfo.setText(SimCard.getSimCardInfo().toString());
     }
 }

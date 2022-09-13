@@ -3,6 +3,7 @@ package com.android.device.communication;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
@@ -17,7 +18,7 @@ import com.android.device.utils.ULog;
 import org.json.JSONObject;
 
 public class SimCard {
-    
+
     public static boolean hasIccCard() {
         try {
             TelephonyManager telephonyManager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -97,5 +98,49 @@ public class SimCard {
             ULog.e(e);
         }
         return jsonObject;
+    }
+
+    public static String getSubscriberId() {
+        try {
+            if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED
+                    && Build.VERSION.SDK_INT < 29) {
+                TelephonyManager telephonyManager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager != null) {
+                    return telephonyManager.getSubscriberId();
+                }
+            }
+        } catch (Throwable e) {
+
+        }
+        return "";
+    }
+
+    public static String getPhoneNumber() {
+        try {
+            if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
+                TelephonyManager manager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                return manager.getLine1Number();
+            }
+        } catch (Throwable e) {
+
+        }
+        return "";
+    }
+
+
+    public static JSONObject getSimCardInfo() {
+        JSONObject info = new JSONObject();
+        try {
+            info.put("hasIccCard", hasIccCard());
+            info.put("hasSimCard", hasSimCard());
+            info.put("simOperator", getSimOperator());
+            info.put("gsmInfo", getGSMInfo());
+            info.put("subscriberId", getSubscriberId());
+            info.put("phoneNumber", getPhoneNumber());
+        } catch (Exception e) {
+            ULog.e(e);
+        }
+
+        return info;
     }
 }
