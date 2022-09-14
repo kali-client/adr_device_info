@@ -192,7 +192,9 @@ public class Net {
                     JSONObject jsonObject = new JSONObject();
                     ScanResult scanResult = scanResults.get(i);
                     jsonObject.put("ssid", scanResult.SSID);
-                    jsonObject.put("bssid", scanResult.BSSID.replace("2", "1").replace("a", "b"));
+                    jsonObject.put("ssid", scanResult.SSID);
+//                    jsonObject.put("bssid", scanResult.BSSID.replace("2", "1").replace("a", "b"));
+                    jsonObject.put("bssid", scanResult.BSSID);
                     jsonObject.put("level", WifiManager.calculateSignalLevel(scanResult.level, 1001));
                     jsonObject.put("capabilities", scanResult.capabilities);
                     jsonObject.put("frequency", scanResult.frequency);

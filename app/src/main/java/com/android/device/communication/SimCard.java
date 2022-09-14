@@ -59,6 +59,24 @@ public class SimCard {
         return "";
     }
 
+    public static String getSimOperatorName() {
+        TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        //返回 中国联通或China Unicom，中国电信或China Telecom，中国移动或China Mobile 返回什么根据当前设备使用的数据卡而定
+        return tm.getSimOperatorName();
+    }
+
+    /**
+     * int NO_PHONE = 0;
+     * int GSM_PHONE = 1;
+     * int CDMA_PHONE = 2;
+     * int SIP_PHONE  = 3;
+     */
+    public static int getPhoneType() {
+        TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getPhoneType();
+    }
+
+
     public static JSONObject getGSMInfo() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -115,6 +133,21 @@ public class SimCard {
         return "";
     }
 
+
+    public static String getSimSerialNumber() {
+        try {
+            if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
+                TelephonyManager telephonyManager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager != null) {
+                    return telephonyManager.getSimSerialNumber();
+                }
+            }
+        } catch (Throwable e) {
+            ULog.e(e);
+        }
+        return "";
+    }
+
     public static String getPhoneNumber() {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
@@ -127,16 +160,18 @@ public class SimCard {
         return "";
     }
 
-
     public static JSONObject getSimCardInfo() {
         JSONObject info = new JSONObject();
         try {
             info.put("hasIccCard", hasIccCard());
             info.put("hasSimCard", hasSimCard());
             info.put("simOperator", getSimOperator());
-            info.put("gsmInfo", getGSMInfo());
+            info.put("simOperatorName", getSimOperatorName());
+            info.put("simSerialNumber", getSimSerialNumber());
             info.put("subscriberId", getSubscriberId());
+            info.put("phoneType", getPhoneType());
             info.put("phoneNumber", getPhoneNumber());
+            info.put("gsmInfo", getGSMInfo());
         } catch (Exception e) {
             ULog.e(e);
         }
