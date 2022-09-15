@@ -184,13 +184,16 @@ public class SimCard {
         try {
             info.put("hasIccCard", hasIccCard());
             info.put("hasSimCard", hasSimCard());
-            info.put("simOperator", getSimOperator());
-            info.put("simOperatorName", getSimOperatorName());
-            info.put("simSerialNumber", getSimSerialNumber());
-            info.put("simCarrierIdName", getSimCarrierIdName());
-            info.put("simCarrierId", getSimCarrierId());
-            info.put("subscriberId", getSubscriberId());
             info.put("phoneType", getPhoneType());
+
+            info.put("simOperator", getSimOperator());
+            info.put("simSerialNumber", getSimSerialNumber());
+            info.put("subscriberId", getSubscriberId());
+
+
+            info.put("simCarrierId", getSimCarrierId());
+            info.put("simOperatorName", getSimOperatorName());
+            info.put("simCarrierIdName", getSimCarrierIdName());
             info.put("phoneNumber", getPhoneNumber());
             info.put("gsmInfo", getGSMInfo());
         } catch (Exception e) {
