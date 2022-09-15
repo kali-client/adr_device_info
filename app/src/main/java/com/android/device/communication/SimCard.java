@@ -1,14 +1,18 @@
 package com.android.device.communication;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -194,5 +198,23 @@ public class SimCard {
         }
 
         return info;
+    }
+
+    public static void testReadNameByPhone() {
+        Uri uri = Uri.parse("content://telephony/siminfo"); //访问raw_contacts表
+        ContentResolver resolver = UApplication.getContext().getContentResolver();
+        Cursor cursor = resolver.query(uri, new String[]{"_id", "icc_id", "sim_id", "display_name", "carrier_name", "name_source", "color", "number", "display_number_format", "data_roaming", "mcc", "mnc"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int count = cursor.getColumnCount();
+                for (int i = 0; i < count; i++) {
+                    String key =  cursor.getColumnName(i);
+                    String value = cursor.getString(i);
+                    Log.d("ULog",key + ":" + value);
+                }
+                Log.e("ULog","-------------------------------");
+            }
+            cursor.close();
+        }
     }
 }
