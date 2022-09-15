@@ -10,6 +10,7 @@ import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.android.device.UApplication;
@@ -74,6 +75,19 @@ public class SimCard {
     public static int getPhoneType() {
         TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         return tm.getPhoneType();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public static CharSequence getSimCarrierIdName() {
+        TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getSimCarrierIdName();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public static int getSimCarrierId() {
+        TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getSimCarrierId();
     }
 
 
@@ -160,6 +174,7 @@ public class SimCard {
         return "";
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public static JSONObject getSimCardInfo() {
         JSONObject info = new JSONObject();
         try {
@@ -168,6 +183,8 @@ public class SimCard {
             info.put("simOperator", getSimOperator());
             info.put("simOperatorName", getSimOperatorName());
             info.put("simSerialNumber", getSimSerialNumber());
+            info.put("simCarrierIdName", getSimCarrierIdName());
+            info.put("simCarrierId", getSimCarrierId());
             info.put("subscriberId", getSubscriberId());
             info.put("phoneType", getPhoneType());
             info.put("phoneNumber", getPhoneNumber());
