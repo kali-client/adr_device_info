@@ -11,6 +11,8 @@ public class Countries {
     public final static String[] CHINESE_NAME = {"中国", "美国", "英国", "菲律宾", "印度尼西亚", "越南", "泰国"};
     public final static String[] ENGLISH_NAME = {"ChiaNa", "America", "Britain", "Philippines", "Indonesia", "Viet Nam", "Thailand"};
     public final static String[] COUNTRY_ABBR = {"CN", "US", "GB", "PH", "ID", "VN", "TH"};
+
+    public final static String[] TIME_ZONE = {"Asia/Shanghai", "America/Los_Angeles", "Europe/London", "Asia/Manila", "Asia/Jakarta", "Asia/Ho_Chi_Minh", "Asia/Bangkok"};
     private final static HashMap<String, Country> countries = new HashMap<>();
 
     static {
@@ -26,13 +28,19 @@ public class Countries {
             country.setPhonePre(PHONE_PRE[i]);
             country.setPhoneNoCount(PHONE_NO_COUNT[i]);
             country.setCountryAbbr(COUNTRY_ABBR[i]);
+            country.setTimeZone(TIME_ZONE[i]);
             countries.put(COUNTRY_CODE[i], country);
+            countries.put(TIME_ZONE[i], country);
         }
     }
 
 
     public static Country getCountryByCode(String countryCode) {
         return countries.get(countryCode);
+    }
+
+    public static Country getCountryByTimeZone(String timezone) {
+        return countries.get(timezone);
     }
 
 }

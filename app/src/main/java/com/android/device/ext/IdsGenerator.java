@@ -54,7 +54,7 @@ public class IdsGenerator {
         return phoneNo.toString();
     }
 
-    
+
 //    public static void main(String[] args) {
 //        String iccid = generateICCID("44");
 //        String imsi = generateIMSI("44");

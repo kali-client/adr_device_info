@@ -14,9 +14,11 @@ public class Country {
     private String mcc;//移动国家码
     private String[] mnc;//移动网络码
 
+    private String timeZone;
     private String[] phonePre;
 
     private int phoneNoCount;
+
 
 //    private String imsi;//International Mobile Subscriber Identity
 //    private String iccid;//Integrate circuit card identity 集成电路卡识别码
@@ -85,6 +87,14 @@ public class Country {
 
     public void setPhoneNoCount(int phoneNoCount) {
         this.phoneNoCount = phoneNoCount;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 
     public String getSimOperator() {
