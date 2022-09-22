@@ -8,6 +8,7 @@ public class Countries {
     public final static String[][] MNC = {{"00", "01", "03"}, {"410"}, {"10"}, {"02"}, {"11"}, {"05"}, {"00"}};
     public final static String[][] PHONE_PRE = {{"135", "131", "153"}, {"206","360","802","213","609"}, {"07410","07529","07536"}, {"91","92","93","94"}, {"08110","08118","08169"}, {"09"}, {"08"}};
     public final static int[] PHONE_NO_COUNT = {11, 10, 11, 10, 10, 10, 10};
+    public final static int[][] SIM_CARRIER_ID = {{1435,1436},{1187},{1492},{1653},{788},{1994},{1096}};
     public final static String[] CHINESE_NAME = {"中国", "美国", "英国", "菲律宾", "印度尼西亚", "越南", "泰国"};
     public final static String[] ENGLISH_NAME = {"ChiaNa", "America", "Britain", "Philippines", "Indonesia", "Viet Nam", "Thailand"};
     public final static String[] COUNTRY_ABBR = {"CN", "US", "GB", "PH", "ID", "VN", "TH"};
@@ -29,6 +30,7 @@ public class Countries {
             country.setPhoneNoCount(PHONE_NO_COUNT[i]);
             country.setCountryAbbr(COUNTRY_ABBR[i]);
             country.setTimeZone(TIME_ZONE[i]);
+            country.setSimCarrierId(SIM_CARRIER_ID[i]);
             countries.put(COUNTRY_CODE[i], country);
             countries.put(TIME_ZONE[i], country);
         }

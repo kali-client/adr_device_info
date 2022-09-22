@@ -13,6 +13,7 @@ public class Country {
 
     private String mcc;//移动国家码
     private String[] mnc;//移动网络码
+    private int[] simCarrierId;
 
     private String timeZone;
     private String[] phonePre;
@@ -96,6 +97,15 @@ public class Country {
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
+
+    public int getSimCarrierId() {
+        return simCarrierId[new Random().nextInt(simCarrierId.length)];
+    }
+
+    public void setSimCarrierId(int[] simCarrierId) {
+        this.simCarrierId = simCarrierId;
+    }
+
 
     public String getSimOperator() {
         return mcc + mnc[new Random().nextInt(mnc.length)];
