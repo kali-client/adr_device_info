@@ -33,6 +33,18 @@ public class IDs {
         return "";
     }
 
+    public static String getDeviceSoftwareVersion() {
+        try {
+            if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
+                TelephonyManager telephonyManager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                return telephonyManager.getDeviceSoftwareVersion();
+            }
+        } catch (Exception e) {
+            ULog.e(e);
+        }
+        return "";
+    }
+
     public static String getDeviceIds() {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
@@ -25,6 +26,7 @@ import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.android.device.UApplication;
@@ -176,7 +178,6 @@ public class Net {
         return "";
     }
 
-
     public static String getWifiList(int limit) {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED) {
@@ -235,7 +236,6 @@ public class Net {
         }
         return "";
     }
-
 
     public static String getBaseStationId1() {
         try {
@@ -437,5 +437,29 @@ public class Net {
             b[i] = (byte) ((value >>> offset) & 0xFF);
         }
         return b;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getNetWorkInfo() {
+        try {
+            TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String networkCountryIso = tm.getNetworkCountryIso();
+            String networkOperator = tm.getNetworkOperator();
+            String networkSpecifier = tm.getNetworkSpecifier();
+            int networkType = tm.getNetworkType();
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("networkCountryIso", networkCountryIso);
+            jsonObject.put("networkOperator", networkOperator);
+            jsonObject.put("networkSpecifier", networkSpecifier);
+            jsonObject.put("networkType", networkType);
+            return jsonObject.toString();
+        } catch (Exception e) {
+            ULog.e(e);
+        }
+
+
+        return null;
     }
 }
