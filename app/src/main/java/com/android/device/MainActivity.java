@@ -13,16 +13,20 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.device.communication.Net;
 import com.android.device.communication.SimCard;
+import com.android.device.utils.ULog;
+
+import java.util.TimeZone;
 
 
 public class MainActivity extends Activity {
 
     private TextView tvInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION},0x001);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, 0x001);
         tvInfo = findViewById(R.id.tv_info);
     }
 
@@ -33,7 +37,9 @@ public class MainActivity extends Activity {
 //        tvInfo.setText(SimCard.getGSMInfo().toString());
 //        tvInfo.setText(Build.getBuildInfo().toString());
 //        tvInfo.setText(IDs.getImei());
-        tvInfo.setText(SimCard.getSimCardInfo().toString());
 //        tvInfo.setText(SimCard.getSimCardInfo().toString());
+        tvInfo.setText("simInfo:"+ SimCard.getSimCardInfo());
+        ULog.d("SimSerialNumber:"+SimCard.getSimSerialNumber());
+        ULog.d("persist.sys.timezone:"+ TimeZone.getDefault().getID());
     }
 }

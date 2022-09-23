@@ -188,14 +188,15 @@ public class SimCard {
 
             info.put("simOperator", getSimOperator());
             info.put("simSerialNumber", getSimSerialNumber());
-            info.put("subscriberId", getSubscriberId());
-
-
+            info.put("subscriberId", getSubscriberId()+"");
+            info.put("phoneNumber", getPhoneNumber());
             info.put("simCarrierId", getSimCarrierId());
+
+
             info.put("simOperatorName", getSimOperatorName());
             info.put("simCarrierIdName", getSimCarrierIdName());
-            info.put("phoneNumber", getPhoneNumber());
-            info.put("gsmInfo", getGSMInfo());
+            ULog.e(info.toString());
+//            info.put("gsmInfo", getGSMInfo());
         } catch (Exception e) {
             ULog.e(e);
         }
