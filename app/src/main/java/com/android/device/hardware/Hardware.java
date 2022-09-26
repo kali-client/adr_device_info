@@ -2,10 +2,13 @@ package com.android.device.hardware;
 
 import static android.content.Context.SENSOR_SERVICE;
 
+import android.content.Context;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Build;
 
 import com.android.device.UApplication;
@@ -135,6 +138,12 @@ public final class Hardware {
             }
         }
         return cpuName != null ? cpuName : "";
+    }
+
+    public static boolean isSupportNFC(){
+        NfcManager nfcManager = (NfcManager) UApplication.getContext().getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = nfcManager.getDefaultAdapter();
+        return adapter != null;
     }
 
 }

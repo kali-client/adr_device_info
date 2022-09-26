@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.device.communication.Net;
 import com.android.device.communication.SimCard;
+import com.android.device.hardware.Hardware;
 import com.android.device.software.Screen;
 import com.android.device.utils.ULog;
 
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
 //        tvInfo.setText(SimCard.getSimCardInfo().toString());
 
 
-        tvInfo.setText("getRefreshRate:"+Screen.getRefreshRate(this));
+        tvInfo.setText("nfc:"+ Hardware.isSupportNFC());
         ULog.d("SimSerialNumber:"+SimCard.getSimSerialNumber());
         ULog.d("persist.sys.timezone:"+ TimeZone.getDefault().getID());
     }
