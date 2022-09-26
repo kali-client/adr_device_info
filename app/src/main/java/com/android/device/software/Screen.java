@@ -1,8 +1,10 @@
 package com.android.device.software;
 
+import android.app.Activity;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.WindowManager;
 
 import com.android.device.UApplication;
@@ -51,6 +53,12 @@ public final class Screen {
         return "";
     }
 
+    public static float getRefreshRate(Activity activity){
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        float refreshRate = display.getRefreshRate();
+        return refreshRate;
+    }
+
     public static JSONObject getScreenInfo() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -62,6 +70,7 @@ public final class Screen {
         }
         return jsonObject;
     }
+
 
 }
 
