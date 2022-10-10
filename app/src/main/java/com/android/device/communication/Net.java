@@ -2,11 +2,14 @@ package com.android.device.communication;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
@@ -439,7 +442,6 @@ public class Net {
         return b;
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String getNetWorkInfo() {
         try {
@@ -461,5 +463,109 @@ public class Net {
 
 
         return null;
+    }
+
+
+    public static boolean isWifi(Context context) {
+        return Wifi.getNetWorkStatus(context) == 1;
+    }
+
+    static class Wifi {
+        private static Integer networkType;
+
+        public final static int getNetWorkStatus(Context context) {
+            Integer num = networkType;
+            Integer num2 = 0;
+            if (num != null && (num == null || num.intValue() != 0)) {
+                Integer num3 = networkType;
+                if (num3 != null) {
+                    return num3.intValue();
+                }
+                return 0;
+            } else if (Build.VERSION.SDK_INT < 23 || context.checkSelfPermission("android.permission.ACCESS_NETWORK_STATE") == PackageManager.PERMISSION_GRANTED) {
+                Object systemService = context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                TelephonyManager telephonyManager = null;
+                if (!(systemService instanceof ConnectivityManager)) {
+                    systemService = null;
+                }
+                ConnectivityManager connectivityManager = (ConnectivityManager) systemService;
+                if (connectivityManager != null) {
+                    if (!isNetworkAvailable(connectivityManager)) {
+                        networkType = num2;
+                        return 0;
+                    } else if (isWiFiNetwork(connectivityManager)) {
+                        networkType = 1;
+                        return 1;
+                    }
+                }
+
+                //TODO  mobileNetworkType
+//            Object systemService2 = context.getSystemService(Context.TELEPHONY_SERVICE);
+//            if (systemService2 instanceof TelephonyManager) {
+//                telephonyManager = (TelephonyManager) systemService2;
+//            }
+//            Integer valueOf = Integer.valueOf(INSTANCE.mobileNetworkType(context, telephonyManager, connectivityManager));
+//            networkType = valueOf;
+//            if (valueOf != null) {
+//                return valueOf.intValue();
+//            }
+                return 0;
+            } else {
+                networkType = num2;
+                if (num2 != null) {
+                    return num2.intValue();
+                }
+                return 0;
+            }
+        }
+
+        private static boolean isNetworkAvailable(ConnectivityManager connectivityManager) {
+            NetworkCapabilities networkCapabilities;
+            if (connectivityManager == null) {
+                return false;
+            }
+            if (Build.VERSION.SDK_INT >= 23) {
+                Network activeNetwork = connectivityManager.getActiveNetwork();
+                if (activeNetwork == null || (networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)) == null) {
+                    return false;
+                }
+                return isNetworkValid(networkCapabilities);
+            }
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
+
+        @SuppressLint("WrongConstant")
+        @TargetApi(Build.VERSION_CODES.M)
+        private static boolean isNetworkValid(NetworkCapabilities networkCapabilities) {
+            if (networkCapabilities == null || Build.VERSION.SDK_INT < 21) {
+                return false;
+            }
+            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                    || networkCapabilities.hasTransport(7)
+                    || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+                    || networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+        }
+
+        private static boolean isWiFiNetwork(ConnectivityManager connectivityManager) {
+            NetworkCapabilities networkCapabilities;
+            NetworkInfo networkInfo = null;
+            Network network = null;
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (connectivityManager != null) {
+                    network = connectivityManager.getActiveNetwork();
+                }
+                if (network == null || (networkCapabilities = connectivityManager.getNetworkCapabilities(network)) == null) {
+                    return false;
+                }
+                return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+            }
+            if (connectivityManager != null) {
+                networkInfo = connectivityManager.getNetworkInfo(1);
+            }
+            return networkInfo != null && networkInfo.isConnectedOrConnecting();
+        }
     }
 }
