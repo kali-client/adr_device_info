@@ -13,9 +13,9 @@ import android.os.Build;
 import android.os.Debug;
 import android.text.TextUtils;
 
-import com.android.device.UApplication;
-import com.android.device.utils.Cmd;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.Cmd;
+import com.android.utils.ULog;
 
 
 final class Checker {

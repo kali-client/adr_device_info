@@ -5,7 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.android.device.MainActivity">
+    tools:context="com.android.MainActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:background="#2196F3"
+        android:onClick="uploadData"
+        android:text="上报数据"
+        android:textSize="16dp" />
+
 
     <Button
         android:layout_width="match_parent"

@@ -2,8 +2,8 @@ package com.android.device.software;
 
 import android.content.pm.PackageManager;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import org.json.JSONObject;
 

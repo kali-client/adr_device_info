@@ -13,8 +13,8 @@ import android.webkit.WebSettings;
 
 import androidx.core.app.ActivityCompat;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import java.util.Locale;
 

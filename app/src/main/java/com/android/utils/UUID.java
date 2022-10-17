@@ -1,4 +1,4 @@
-package com.android.device.utils;
+package com.android.utils;
 
 public final class UUID {
     public static String randomUUID() {

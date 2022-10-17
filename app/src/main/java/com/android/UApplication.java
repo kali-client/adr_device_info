@@ -1,4 +1,4 @@
-package com.android.device;
+package com.android;
 
 import android.app.Application;
 import android.content.Context;

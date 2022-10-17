@@ -6,8 +6,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import org.json.JSONObject;
 

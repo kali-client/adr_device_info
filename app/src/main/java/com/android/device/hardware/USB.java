@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.provider.Settings;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import org.json.JSONException;
 import org.json.JSONObject;

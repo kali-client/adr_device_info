@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.BatteryManager;
 import android.os.Build;
 
-import com.android.device.UApplication;
+import com.android.UApplication;
 
 import java.util.HashMap;
 import java.util.Map;

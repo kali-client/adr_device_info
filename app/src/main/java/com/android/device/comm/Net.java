@@ -1,4 +1,4 @@
-package com.android.device.communication;
+package com.android.device.comm;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,8 +32,8 @@ import android.text.TextUtils;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -135,7 +135,7 @@ public class Net {
         return "";
     }
 
-    public static String getNetworkType() {
+    public static String getNetworkTypeName() {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) UApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -443,7 +443,7 @@ public class Net {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String getNetWorkInfo() {
+    public static String getNetWorkInfo(Context context) {
         try {
             TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
             String networkCountryIso = tm.getNetworkCountryIso();
@@ -456,6 +456,8 @@ public class Net {
             jsonObject.put("networkOperator", networkOperator);
             jsonObject.put("networkSpecifier", networkSpecifier);
             jsonObject.put("networkType", networkType);
+            jsonObject.put("networkTypeName", getNetworkTypeName());
+            jsonObject.put("isWifi", isWifi(context));
             return jsonObject.toString();
         } catch (Exception e) {
             ULog.e(e);
@@ -550,6 +552,7 @@ public class Net {
         }
 
         private static boolean isWiFiNetwork(ConnectivityManager connectivityManager) {
+            Toast
             NetworkCapabilities networkCapabilities;
             NetworkInfo networkInfo = null;
             Network network = null;

@@ -12,9 +12,9 @@ import android.provider.MediaStore;
 
 import androidx.core.content.ContextCompat;
 
-import com.android.device.UApplication;
-import com.android.device.utils.MD5;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.MD5;
+import com.android.utils.ULog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

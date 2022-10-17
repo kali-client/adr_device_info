@@ -1,24 +1,22 @@
-package com.android.device;
+package com.android;
 
 import android.Manifest;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
-import com.android.device.communication.Net;
-import com.android.device.communication.SimCard;
-import com.android.device.hardware.Hardware;
-import com.android.device.software.Screen;
-import com.android.device.utils.ULog;
-
-import java.util.TimeZone;
+import com.android.assemble.CollectDeviceInfo;
+import com.android.device.R;
+import com.android.device.comm.Net;
+import com.android.device.comm.SimCard;
+import com.android.utils.Http;
+import com.android.utils.ULog;
 
 
 public class MainActivity extends Activity {
@@ -31,7 +29,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, 0x001);
         tvInfo = findViewById(R.id.tv_info);
-
     }
 
 
@@ -42,7 +39,16 @@ public class MainActivity extends Activity {
 //        tvInfo.setText(Build.getBuildInfo().toString());
 //        tvInfo.setText(IDs.getImei());
 //        tvInfo.setText(SimCard.getSimCardInfo().toString());
-        tvInfo.setText("isWifi:" + Net.isWifi(this));
+        tvInfo.setText(Net.getNetWorkInfo(this));
         ULog.d("SimSerialNumber:" + SimCard.getSimSerialNumber());
+    }
+
+    public void uploadData(View view) {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                Http.uploadData("kali", Build.MODEL + "_" + Build.VERSION.SDK_INT + "_DeviceInfo", CollectDeviceInfo.getDeviceInfo(), null);
+            }
+        });
     }
 }

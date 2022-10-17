@@ -1,4 +1,4 @@
-package com.android.device.communication;
+package com.android.device.comm;
 
 import android.Manifest;
 import android.content.Context;
@@ -7,18 +7,14 @@ import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.android.device.UApplication;
-import com.android.device.utils.ULog;
+import com.android.UApplication;
+import com.android.utils.ULog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class Location {
 

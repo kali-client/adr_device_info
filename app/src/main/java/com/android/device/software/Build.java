@@ -1,6 +1,6 @@
 package com.android.device.software;
 
-import com.android.device.utils.ULog;
+import com.android.utils.ULog;
 
 import org.json.JSONObject;
 
