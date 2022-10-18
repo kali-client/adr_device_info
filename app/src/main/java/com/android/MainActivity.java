@@ -15,6 +15,7 @@ import com.android.assemble.CollectDeviceInfo;
 import com.android.device.R;
 import com.android.device.comm.Net;
 import com.android.device.comm.SimCard;
+import com.android.device.ids.IDs;
 import com.android.utils.Http;
 import com.android.utils.ULog;
 
@@ -39,8 +40,8 @@ public class MainActivity extends Activity {
 //        tvInfo.setText(Build.getBuildInfo().toString());
 //        tvInfo.setText(IDs.getImei());
 //        tvInfo.setText(SimCard.getSimCardInfo().toString());
-        tvInfo.setText(Net.getNetWorkInfo(this));
-        ULog.d("SimSerialNumber:" + SimCard.getSimSerialNumber());
+        tvInfo.setText(IDs.getAdid());
+        ULog.d("AndroidID:" + IDs.getAdid());
     }
 
     public void uploadData(View view) {

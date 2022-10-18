@@ -16,6 +16,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Process;
 import android.provider.Settings;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
@@ -38,13 +39,19 @@ import com.android.utils.ULog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class Net {
     @SuppressLint("Range")
@@ -156,7 +163,6 @@ public class Net {
             if (networkInterface == null) {
                 networkInterface = NetworkInterface.getByName("wlan0");
             }
-
             if (networkInterface == null) {
                 return "";
             } else {
@@ -179,6 +185,168 @@ public class Net {
             ULog.e(e);
         }
         return "";
+    }
+
+
+    public static String getMac1(Context context){
+        return Mac.getMacAddressTD(context);
+    }
+
+    static class Mac{
+        public static String getMacAddressTD(Context context) {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            String str = "";
+            if (context.checkPermission("android.permission.ACCESS_WIFI_STATE", Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED && wifiManager.isWifiEnabled()) {
+                WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+                if (Build.VERSION.SDK_INT < 23) {
+                    str = connectionInfo.getMacAddress();
+                } else {
+                    try {
+                        NetworkInterface byInetAddress = NetworkInterface.getByInetAddress(InetAddress.getByName(str));
+                        if (byInetAddress != null) {
+                            return formatMac(byInetAddress.getHardwareAddress());
+                        }
+                        return "";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+            if (str == null || "".equals(str.trim()) || str.length() == 0) {
+                String str2 = "/sys/class/net/wlan0/address";//  /sys/class/net/wlan0/address
+                String str3 = "/sys/class/net/eth0/address";//  /sys/class/net/eth0/address
+                str = readFile(str2);
+                if (str == null || "".equals(str.trim()) || str.length() == 0) {
+                    str = readFile(str3);
+                }
+            }
+            return TextUtils.isEmpty(str) ? getMac() : str;
+        }
+
+
+        private static String formatMac(byte[] bArr) {
+            if (bArr == null) {
+                return "";
+            }
+            StringBuffer stringBuffer = new StringBuffer(bArr.length);
+            for (byte b : bArr) {
+                String hexString = Integer.toHexString(b & (-1));
+                if (hexString.length() == 1) {
+                    stringBuffer.append("0");
+                    stringBuffer.append(hexString);
+                } else {
+                    stringBuffer.append(hexString);
+                }
+                stringBuffer.append(":");
+            }
+            return stringBuffer.substring(0, stringBuffer.length() - 1);
+        }
+
+
+        private static String readFile(String str) {
+            FileInputStream fileInputStream;
+            Throwable th;
+            File file = new File(str);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            FileInputStream fileInputStream2 = null;
+            if (file.exists() && file.canRead()) {
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    try {
+                        byte[] bArr = new byte[1024];
+                        while (true) {
+                            int read = fileInputStream.read(bArr);
+                            if (read == -1) {
+                                break;
+                            }
+                            byteArrayOutputStream.write(bArr, 0, read);
+                        }
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+                        if (!(byteArray == null || byteArray.length == 0)) {
+                            String replaceAll = new String(byteArray, "utf-8").replaceAll("\n", "").replaceAll(" ","");
+                            try {
+                                fileInputStream.close();
+                            } catch (IOException unused) {
+                            }
+                            try {
+                                byteArrayOutputStream.close();
+                            } catch (IOException unused2) {
+                            }
+                            return replaceAll;
+                        }
+                        try {
+                            fileInputStream.close();
+                        } catch (IOException unused3) {
+                        }
+                        try {
+                            byteArrayOutputStream.close();
+                        } catch (IOException unused4) {
+                        }
+                        return "";
+                    } catch (Exception unused5) {
+                        if (fileInputStream != null) {
+                            try {
+                                fileInputStream.close();
+                            } catch (IOException unused6) {
+                            }
+                        }
+                        try {
+                            byteArrayOutputStream.close();
+                        } catch (IOException unused7) {
+                        }
+                        return null;
+                    } catch (Throwable th2) {
+                        th = th2;
+                        fileInputStream2 = fileInputStream;
+                        if (fileInputStream2 != null) {
+                            try {
+                                fileInputStream2.close();
+                            } catch (IOException unused8) {
+                            }
+                        }
+                        try {
+                            byteArrayOutputStream.close();
+                        } catch (IOException unused9) {
+                        }
+                        throw th;
+                    }
+                } catch (Exception unused10) {
+                    fileInputStream = null;
+                } catch (Throwable th3) {
+                    th = th3;
+                }
+            }
+            return null;
+        }
+
+        public static String getMac() {
+            if (Build.VERSION.SDK_INT > 23) {
+                try {
+                    Iterator it = Collections.list(NetworkInterface.getNetworkInterfaces()).iterator();
+                    while (it.hasNext()) {
+                        NetworkInterface networkInterface = (NetworkInterface) it.next();
+                        if (networkInterface.getName().equalsIgnoreCase("wlan0")) {
+                            byte[] hardwareAddress = networkInterface.getHardwareAddress();
+                            if (hardwareAddress == null) {
+                                return "";
+                            }
+                            StringBuilder sb = new StringBuilder();
+                            for (byte b : hardwareAddress) {
+                                sb.append(String.format(Locale.US, "%02X:", Byte.valueOf(b)));
+                            }
+                            if (sb.length() > 0) {
+                                sb.deleteCharAt(sb.length() - 1);
+                            }
+                            return sb.toString().toLowerCase();
+                        }
+                    }
+                } catch (Exception unused) {
+                }
+            }
+            return "";
+        }
+
     }
 
     public static String getWifiList(int limit) {
@@ -552,7 +720,6 @@ public class Net {
         }
 
         private static boolean isWiFiNetwork(ConnectivityManager connectivityManager) {
-            Toast
             NetworkCapabilities networkCapabilities;
             NetworkInfo networkInfo = null;
             Network network = null;
