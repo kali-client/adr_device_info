@@ -50,4 +50,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "adr_device_info"
 include ':app'
-include ':maven'
+include ':java-se'

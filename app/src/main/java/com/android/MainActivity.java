@@ -2,29 +2,18 @@ package com.android;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.TestServiceManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
-import com.aliyun.upload.TestMaven;
 import com.android.assemble.CollectDeviceInfo;
 import com.android.device.R;
-import com.android.device.comm.Net;
-import com.android.device.comm.SimCard;
-import com.android.device.ids.IDs;
-import com.android.utils.Cmd;
 import com.android.utils.Http;
-import com.android.utils.ULog;
-
-import java.util.Locale;
 
 
 public class MainActivity extends Activity {
@@ -45,6 +34,7 @@ public class MainActivity extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void getDeviceInfo(final View view) {
+
 //        tvInfo.setText("hasSimCard:"+SimCard.hasSimCard() + "\n hasIccCard:" + SimCard.hasIccCard() + "\nSimOperator:" + SimCard.getSimOperator() + "\nSimSerialNumber:"+ IDs.getSimSerialNumber());
 //        tvInfo.setText(SimCard.getGSMInfo().toString());
 //        tvInfo.setText(Build.getBuildInfo().toString());
@@ -62,13 +52,13 @@ public class MainActivity extends Activity {
 //                //getikytDeviceInfo(view);
 //            }
 //        }, 200);
-
-        TestServiceManager testServiceManager = (TestServiceManager) getSystemService("test_service");
-        tvInfo.setText("TestServiceManager:" + testServiceManager.toString());
-        testServiceManager.setValue("test", "12345");
-        tvInfo.setText("value:" + testServiceManager.getValue("test"));
+//
+//        TestServiceManager testServiceManager = (TestServiceManager) getSystemService("test_service");
+//        tvInfo.setText("TestServiceManager:" + testServiceManager.toString());
+//        testServiceManager.setValue("test", "12345");
+//        tvInfo.setText("value:" + testServiceManager.getValue("test"));
 //        tvInfo.setText("mac0:" + Net.getMacAddress() + "   mac1：" + Net.getMac1(this));
-        Log.d("mac", Net.getMacAddress());
+//        Log.d("mac", Net.getMacAddress());
     }
 
     public void uploadData(View view) {
