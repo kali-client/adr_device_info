@@ -171,7 +171,6 @@ public class IDs {
         return "";
     }
 
-
     public static String getSimSerialNumber() {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
@@ -186,7 +185,6 @@ public class IDs {
         return "";
     }
 
-
     public static String getPhoneNumber() {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
@@ -198,7 +196,6 @@ public class IDs {
         }
         return "";
     }
-
 
     public static String getUserAgent() {
         try {
@@ -246,5 +243,9 @@ public class IDs {
             ULog.e(e);
         }
         return "";
+    }
+
+    public static String getGoogleADID(Context context) {
+        return AdvertisingIdClient.getGoogleAdId(context);
     }
 }
