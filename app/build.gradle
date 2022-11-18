@@ -13,12 +13,58 @@ android {
         versionName "1.0"
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file('../adr_sign.keystore')
+            storePassword 'android.key'
+            keyAlias 'android_key'
+            keyPassword 'android.key'
+        }
+
+        beta {
+            storeFile file('../adr_sign.keystore')
+            storePassword 'android.key'
+            keyAlias 'android_key'
+            keyPassword 'android.key'
+        }
+
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file('../adr_sign.keystore')
+            storePassword 'android.key'
+            keyAlias 'android_key'
+            keyPassword 'android.key'
         }
     }
+
+    buildTypes {
+
+        debug {
+            zipAlignEnabled true
+            minifyEnabled false
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            versionNameSuffix '-dev'
+            debuggable true
+        }
+
+        beta {
+            zipAlignEnabled true
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.beta
+            versionNameSuffix '-beta'
+            debuggable true
+        }
+
+        release {
+            zipAlignEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -27,4 +73,5 @@ android {
 
 dependencies {
     implementation 'androidx.core:core:1.9.0'
+    api 'io.github.maven-rep:json:1.0.0'
 }

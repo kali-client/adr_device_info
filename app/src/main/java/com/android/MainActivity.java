@@ -2,9 +2,12 @@ package com.android;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,7 +16,12 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.assemble.CollectDeviceInfo;
 import com.android.device.R;
+import com.android.device.comm.SimCard;
+import com.android.device.ids.IDs;
+import com.android.ext.DInfo;
 import com.android.utils.Http;
+
+import java.util.Locale;
 
 
 public class MainActivity extends Activity {
@@ -28,13 +36,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, 0x001);
         tvInfo = findViewById(R.id.tv_info);
-
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void getDeviceInfo(final View view) {
-
+        String xInfo = DInfo.getXInfo(this);
+        tvInfo.setText(xInfo);
+        System.out.println(Locale.getDefault().getCountry().toLowerCase());
+        Log.d("xInfo",xInfo);
 //        tvInfo.setText("hasSimCard:"+SimCard.hasSimCard() + "\n hasIccCard:" + SimCard.hasIccCard() + "\nSimOperator:" + SimCard.getSimOperator() + "\nSimSerialNumber:"+ IDs.getSimSerialNumber());
 //        tvInfo.setText(SimCard.getGSMInfo().toString());
 //        tvInfo.setText(Build.getBuildInfo().toString());

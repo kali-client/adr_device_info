@@ -1,10 +1,12 @@
 package com.android.device.ids;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.media.MediaDrm;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -14,9 +16,12 @@ import android.webkit.WebSettings;
 import androidx.core.app.ActivityCompat;
 
 import com.android.UApplication;
+import com.android.utils.MD5;
 import com.android.utils.ULog;
 
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.UUID;
 
 public class IDs {
 
@@ -160,8 +165,9 @@ public class IDs {
 
     public static String getAdid() {
         try {
-            String adid = Settings.Secure.getString(UApplication.getContext().getContentResolver(),
+            @SuppressLint("HardwareIds") String adid = Settings.Secure.getString(UApplication.getContext().getContentResolver(),
                     Settings.Secure.ANDROID_ID);
+//            Settings.System.getString(UApplication.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
             if (!TextUtils.isEmpty(adid)) {
                 return adid;
             }
@@ -247,5 +253,19 @@ public class IDs {
 
     public static String getGoogleADID(Context context) {
         return AdvertisingIdClient.getGoogleAdId(context);
+    }
+
+    public static String getDrmId() {
+        try {
+            UUID wideVineUuid = new UUID(-0x121074568629b532L, -0x5c37d8232ae2de13L);
+            MediaDrm wvDrm = new MediaDrm(wideVineUuid);
+            byte[] wideVineId = wvDrm.getPropertyByteArray(MediaDrm.PROPERTY_DEVICE_UNIQUE_ID);
+//            Arrays.toString(wideVineId)
+//            return android.util.Base64.encodeToString(wideVineId, Base64.NO_WRAP);
+            return MD5.stringToMD5(new String(wideVineId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

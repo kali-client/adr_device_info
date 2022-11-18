@@ -28,24 +28,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven {
-            credentials {
-                username 'FM5pRT'
-                password 'LsmGC0sEd7'
-            }
-            url 'https://repo.rdc.aliyun.com/repository/139753-release-GkUj3e/'
-        }
-        maven {
-            credentials {
-                username 'FM5pRT'
-                password 'LsmGC0sEd7'
-            }
-            url 'https://repo.rdc.aliyun.com/repository/139753-snapshot-YEF74z/'
-        }
-
     }
 }
 rootProject.name = "adr_device_info"
