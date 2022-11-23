@@ -244,7 +244,6 @@ public final class Media {
         return null;
     }
 
-
     public static JSONObject getMediaInfo() {
         JSONObject jsonObject = new JSONObject();
         try {

@@ -1,8 +1,10 @@
 package com.android.device.env;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
@@ -13,12 +15,17 @@ import android.os.Build;
 import android.os.Debug;
 import android.text.TextUtils;
 
+import androidx.core.app.ActivityCompat;
+
 import com.android.UApplication;
 import com.android.utils.Cmd;
 import com.android.utils.ULog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
-final class Checker {
+
+public class Checker {
 
     public static boolean isEmulator() {
         int suspectCount = 0;
@@ -101,9 +108,11 @@ final class Checker {
                 if (ba == null) {
                     suspectCount++;
                 } else {
-                    String name = ba.getName();
-                    if (TextUtils.isEmpty(name)) {
-                        suspectCount++;
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                        String name = ba.getName();
+                        if (TextUtils.isEmpty(name)) {
+                            suspectCount++;
+                        }
                     }
 
                 }
@@ -143,4 +152,17 @@ final class Checker {
         }
         return false;
     }
+
+    public static JSONObject getEnvCheckerInfo() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("isEmulator", isEmulator());
+            jsonObject.put("isVPN", isVPN());
+            jsonObject.put("isDebug", isDebug());
+        } catch (JSONException e) {
+            ULog.e(e);
+        }
+        return jsonObject;
+    }
+
 }

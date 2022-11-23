@@ -53,18 +53,21 @@ public final class Screen {
         return "";
     }
 
-    public static float getRefreshRate(Activity activity){
+    public static float getRefreshRate(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         float refreshRate = display.getRefreshRate();
         return refreshRate;
     }
 
-    public static JSONObject getScreenInfo() {
+    public static JSONObject getScreenInfo(Context context) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("mode", getScreenMode());
             jsonObject.put("brightness", getScreenBrightness());
             jsonObject.put("whd", getScreenWHD());
+            if (context instanceof Activity) {
+                jsonObject.put("refreshRate", getRefreshRate((Activity) context));
+            }
         } catch (Throwable e) {
             ULog.e(e);
         }

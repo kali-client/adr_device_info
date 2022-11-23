@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Field;
 
 public class Build {
+
     public static JSONObject getBuildInfo() {
         JSONObject jsonObject = new JSONObject();
         try {

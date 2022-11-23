@@ -20,7 +20,10 @@ import androidx.core.app.ActivityCompat;
 import com.android.UApplication;
 import com.android.utils.ULog;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class SimCard {
 
@@ -151,7 +154,6 @@ public class SimCard {
         return "";
     }
 
-
     public static String getSimSerialNumber() {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_DENIED) {
@@ -178,7 +180,29 @@ public class SimCard {
         return "";
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    public static JSONObject queryTelephonySimInfo() {
+        Uri uri = Uri.parse("content://telephony/siminfo"); //访问raw_contacts表
+        ContentResolver resolver = UApplication.getContext().getContentResolver();
+        Cursor cursor = resolver.query(uri, new String[]{"_id", "icc_id", "sim_id", "display_name", "carrier_name", "name_source", "color", "number", "display_number_format", "data_roaming", "mcc", "mnc"}, null, null, null);
+        JSONObject jsonObject = new JSONObject();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int count = cursor.getColumnCount();
+                for (int i = 0; i < count; i++) {
+                    String key = cursor.getColumnName(i);
+                    String value = cursor.getString(i);
+                    try {
+                        jsonObject.put(key, value);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            cursor.close();
+        }
+        return jsonObject;
+    }
+
     public static JSONObject getSimCardInfo() {
         JSONObject info = new JSONObject();
         try {
@@ -188,15 +212,17 @@ public class SimCard {
 
             info.put("simOperator", getSimOperator());
             info.put("simSerialNumber", getSimSerialNumber());
-            info.put("subscriberId", getSubscriberId()+"");
+            info.put("subscriberId", getSubscriberId() + "");
             info.put("phoneNumber", getPhoneNumber());
-            info.put("simCarrierId", getSimCarrierId());
-
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                info.put("simCarrierId", getSimCarrierId());
+            }
+            info.put("gsmInfo", getGSMInfo());
             info.put("simOperatorName", getSimOperatorName());
-            info.put("simCarrierIdName", getSimCarrierIdName());
-            ULog.e(info.toString());
-//            info.put("gsmInfo", getGSMInfo());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                info.put("simCarrierIdName", getSimCarrierIdName());
+            }
+            info.put("queryTelephonySimInfo", queryTelephonySimInfo());
         } catch (Exception e) {
             ULog.e(e);
         }
@@ -204,21 +230,5 @@ public class SimCard {
         return info;
     }
 
-    public static void testReadNameByPhone() {
-        Uri uri = Uri.parse("content://telephony/siminfo"); //访问raw_contacts表
-        ContentResolver resolver = UApplication.getContext().getContentResolver();
-        Cursor cursor = resolver.query(uri, new String[]{"_id", "icc_id", "sim_id", "display_name", "carrier_name", "name_source", "color", "number", "display_number_format", "data_roaming", "mcc", "mnc"}, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                int count = cursor.getColumnCount();
-                for (int i = 0; i < count; i++) {
-                    String key =  cursor.getColumnName(i);
-                    String value = cursor.getString(i);
-                    Log.d("ULog",key + ":" + value);
-                }
-                Log.e("ULog","-------------------------------");
-            }
-            cursor.close();
-        }
-    }
+
 }

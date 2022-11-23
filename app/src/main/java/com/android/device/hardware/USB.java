@@ -40,6 +40,5 @@ public class USB {
             ULog.e(e);
         }
         return jsonObject;
-
     }
 }

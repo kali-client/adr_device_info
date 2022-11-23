@@ -25,6 +25,7 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
@@ -115,7 +116,7 @@ public class Net {
         return "";
     }
 
-    public static String getLinkedWifi() {
+    public static JSONObject getLinkedWifi() {
         try {
             WifiManager wifiManager = (WifiManager) UApplication.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo connectionInfo = wifiManager.getConnectionInfo();
@@ -135,11 +136,11 @@ public class Net {
             } catch (Exception e) {
                 ULog.e(e);
             }
-            return jsonObject.toString();
+            return jsonObject;
         } catch (Throwable e) {
             ULog.e(e);
         }
-        return "";
+        return null;
     }
 
     public static String getNetworkTypeName() {
@@ -188,11 +189,11 @@ public class Net {
     }
 
 
-    public static String getMac1(Context context){
+    public static String getMac1(Context context) {
         return Mac.getMacAddressTD(context);
     }
 
-    static class Mac{
+    static class Mac {
         public static String getMacAddressTD(Context context) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             String str = "";
@@ -264,7 +265,7 @@ public class Net {
                         }
                         byte[] byteArray = byteArrayOutputStream.toByteArray();
                         if (!(byteArray == null || byteArray.length == 0)) {
-                            String replaceAll = new String(byteArray, "utf-8").replaceAll("\n", "").replaceAll(" ","");
+                            String replaceAll = new String(byteArray, "utf-8").replaceAll("\n", "").replaceAll(" ", "");
                             try {
                                 fileInputStream.close();
                             } catch (IOException unused) {
@@ -349,7 +350,7 @@ public class Net {
 
     }
 
-    public static String getWifiList(int limit) {
+    public static JSONArray getWifiList(int limit) {
         try {
             if (ActivityCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED) {
                 JSONArray jsonArray = new JSONArray();
@@ -373,12 +374,12 @@ public class Net {
                     jsonObject.put("describeContents", scanResult.describeContents());
                     jsonArray.put(jsonObject);
                 }
-                return jsonArray.toString();
+                return jsonArray;
             }
         } catch (Throwable e) {
             ULog.e(e);
         }
-        return "";
+        return null;
     }
 
     public static String getBaseStationId() {
@@ -426,7 +427,7 @@ public class Net {
         try {
             String adr = Settings.Secure.getString(UApplication.getContext().getContentResolver(), "bluetooth_address");
             if (TextUtils.isEmpty(adr)) {
-                adr = "02:00:00:00:00:00";
+                adr = "no";
             }
             return adr;
         } catch (Exception e) {
@@ -547,7 +548,7 @@ public class Net {
         return null;
     }
 
-    public static JSONArray getNeighboringCellInfo() {
+//    public static JSONArray getNeighboringCellInfo() {
 //        try {
 //            TelephonyManager manager = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
 //            int strength = 0;
@@ -570,9 +571,9 @@ public class Net {
 //            }
 //        } catch (Throwable e) {
 //        }
-
-        return null;
-    }
+//
+//        return null;
+//    }
 
     public static String getWifiProxy() {
         try {
@@ -608,31 +609,6 @@ public class Net {
             b[i] = (byte) ((value >>> offset) & 0xFF);
         }
         return b;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String getNetWorkInfo(Context context) {
-        try {
-            TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            String networkCountryIso = tm.getNetworkCountryIso();
-            String networkOperator = tm.getNetworkOperator();
-            String networkSpecifier = tm.getNetworkSpecifier();
-            int networkType = tm.getNetworkType();
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("networkCountryIso", networkCountryIso);
-            jsonObject.put("networkOperator", networkOperator);
-            jsonObject.put("networkSpecifier", networkSpecifier);
-            jsonObject.put("networkType", networkType);
-            jsonObject.put("networkTypeName", getNetworkTypeName());
-            jsonObject.put("isWifi", isWifi(context));
-            return jsonObject.toString();
-        } catch (Exception e) {
-            ULog.e(e);
-        }
-
-
-        return null;
     }
 
 
@@ -738,4 +714,48 @@ public class Net {
             return networkInfo != null && networkInfo.isConnectedOrConnecting();
         }
     }
+
+    public static JSONObject getNetInfo(Context context) {
+        try {
+            TelephonyManager tm = (TelephonyManager) UApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String networkCountryIso = tm.getNetworkCountryIso();
+            String networkOperator = tm.getNetworkOperator();
+            String networkSpecifier = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                networkSpecifier = tm.getNetworkSpecifier();
+            }
+            int networkType = -10086;
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                networkType = tm.getNetworkType();
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("networkCountryIso", networkCountryIso);
+            jsonObject.put("networkOperator", networkOperator);
+            jsonObject.put("networkSpecifier", networkSpecifier);
+            jsonObject.put("networkType", networkType);
+            jsonObject.put("networkTypeName", getNetworkTypeName());
+            jsonObject.put("apn", getApn());
+            jsonObject.put("ip", getIp());
+            jsonObject.put("mac1", getMacAddress());
+            jsonObject.put("mac2", getMac1(context));
+            jsonObject.put("linkedWifi", getLinkedWifi());
+            jsonObject.put("wifiList", getWifiList(10));
+            jsonObject.put("isWifi", isWifi(context));
+            jsonObject.put("wifiProxy", getWifiProxy());
+            jsonObject.put("baseStationId", getBaseStationId());
+            jsonObject.put("baseStationId1", getBaseStationId1());
+            jsonObject.put("bluetoothAddress", getBluetoothAddress());
+            jsonObject.put("allCellInfo", getAllCellInfo());
+
+
+            return jsonObject;
+        } catch (Exception e) {
+            ULog.e(e);
+        }
+
+
+        return null;
+    }
+
 }

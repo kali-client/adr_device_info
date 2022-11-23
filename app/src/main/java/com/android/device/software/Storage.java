@@ -14,18 +14,6 @@ import org.json.JSONObject;
 import java.io.File;
 
 public final class Storage {
-    public static JSONObject getMemInfo() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("sdSize", getSDCardSize());
-            jsonObject.put("sysSize", getSystemSize());
-            jsonObject.put("dataSize", getDataSize());
-            jsonObject.put("avaSize", getAvailMemory());
-        } catch (Throwable e) {
-            ULog.e(e);
-        }
-        return jsonObject;
-    }
 
     private static String getSDCardSize() {
         try {
@@ -102,5 +90,19 @@ public final class Storage {
         } catch (Throwable ignored) {
         }
         return "";
+    }
+
+
+    public static JSONObject getStorageInfo() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("sdSize", getSDCardSize());
+            jsonObject.put("sysSize", getSystemSize());
+            jsonObject.put("dataSize", getDataSize());
+            jsonObject.put("avaSize", getAvailMemory());
+        } catch (Throwable e) {
+            ULog.e(e);
+        }
+        return jsonObject;
     }
 }

@@ -1,4 +1,4 @@
-package com.android.ext;
+package com.android.device.ext;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -17,7 +17,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-public class DInfo {
+public class XhsInfo {
 
 
     public static String getCellIp(Context context) {
@@ -96,12 +96,13 @@ public class DInfo {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static String getXInfo(Context context) {
+    public static JSONObject getXInfo(Context context) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cellIp", getCellIp(context));
-            jsonObject.put("imeiBySlot", getImeiBySlot(context, 0));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                jsonObject.put("imeiBySlot", getImeiBySlot(context, 0));
+            }
             jsonObject.put("networkCountryIso", getNetworkCountryIso(context));
             jsonObject.put("operatorCode", getOperatorCode(context));
             jsonObject.put("operatorName", getOperatorName(context));
@@ -109,7 +110,7 @@ public class DInfo {
             jsonObject.put("supportCameraFlash", isSupportCameraFlash(context));
             jsonObject.put("simState", simState(context));
             jsonObject.put("jsfingerPrint", "jsfingerPrint");
-            return jsonObject.toString();
+            return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
         }

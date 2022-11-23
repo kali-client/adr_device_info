@@ -26,6 +26,34 @@ import java.util.List;
 
 public final class Hardware {
 
+    public static String getCpuName() {
+        String valueStr;
+        FileReader fr;
+        String cpuName = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            fr = new FileReader("/proc/cpuinfo");
+            bufferedReader = new BufferedReader(fr);
+            while ((valueStr = bufferedReader.readLine()) != null) {
+                if (valueStr.contains("Hardware")) {
+                    cpuName = valueStr.split(":")[1];
+                    break;
+                }
+            }
+        } catch (Throwable ignored) {
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException ignored) {
+
+                }
+            }
+        }
+        return cpuName != null ? cpuName : "";
+    }
+
     public static String getCpuInfo() { //IO操作
         try {
             StringBuilder cpuInfo = new StringBuilder();
@@ -55,20 +83,6 @@ public final class Hardware {
             ULog.e(e);
         }
         return "";
-    }
-
-    public static JSONObject getSensorInfo() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            SensorManager sm = (SensorManager) UApplication.getContext().getSystemService(SENSOR_SERVICE);
-            List<Sensor> allSensors = sm.getSensorList(Sensor.TYPE_ALL);
-            for (Sensor sensor : allSensors) {
-                jsonObject.put(sensor.getName(), sensor.toString());
-            }
-        } catch (Exception e) {
-            ULog.e(e);
-        }
-        return jsonObject;
     }
 
     public static String getFeatures() {
@@ -111,38 +125,23 @@ public final class Hardware {
         return "";
     }
 
-    public static String getCpuName() {
-        String valueStr;
-        FileReader fr;
-        String cpuName = null;
-        BufferedReader bufferedReader = null;
-
-        try {
-            fr = new FileReader("/proc/cpuinfo");
-            bufferedReader = new BufferedReader(fr);
-            while ((valueStr = bufferedReader.readLine()) != null) {
-                if (valueStr.contains("Hardware")) {
-                    cpuName = valueStr.split(":")[1];
-                    break;
-                }
-            }
-        } catch (Throwable ignored) {
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ignored) {
-
-                }
-            }
-        }
-        return cpuName != null ? cpuName : "";
-    }
-
-    public static boolean isSupportNFC(){
+    public static boolean isSupportNFC() {
         NfcManager nfcManager = (NfcManager) UApplication.getContext().getSystemService(Context.NFC_SERVICE);
         NfcAdapter adapter = nfcManager.getDefaultAdapter();
         return adapter != null;
+    }
+
+    public static JSONObject getHardwareInfo(Context context) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("cpuName", getCpuName());
+            jsonObject.put("cpuInfo", getCpuInfo());
+            jsonObject.put("features", getFeatures());
+            jsonObject.put("supportNFC", isSupportNFC());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 }

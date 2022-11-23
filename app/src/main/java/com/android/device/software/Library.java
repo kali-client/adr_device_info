@@ -61,4 +61,17 @@ public class Library {
         }
         return jsonObject;
     }
+
+
+    public static JSONObject getLibraryInfo() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("libraries", getLibraries());
+            jsonObject.put("javaProperties", getJavaProperties());
+        } catch (Throwable e) {
+            ULog.e(e);
+        }
+        return jsonObject;
+    }
+
 }

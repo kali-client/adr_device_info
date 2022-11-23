@@ -2,26 +2,16 @@ package com.android;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
-import com.android.assemble.CollectDeviceInfo;
+import com.android.device.DInfo;
 import com.android.device.R;
-import com.android.device.comm.SimCard;
-import com.android.device.ids.IDs;
-import com.android.ext.DInfo;
-import com.android.utils.Http;
-
-import java.util.Locale;
 
 
 public class MainActivity extends Activity {
@@ -41,10 +31,18 @@ public class MainActivity extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void getDeviceInfo(final View view) {
-        String xInfo = DInfo.getXInfo(this);
-        tvInfo.setText(xInfo);
-        System.out.println(Locale.getDefault().getCountry().toLowerCase());
-        Log.d("xInfo",xInfo);
+//        String xInfo = DInfo.getXInfo(this);
+        try {
+            Class<?> clazz = Class.forName("com.bun.miitmdid.core.MdidSdkHelper");
+            tvInfo.setText("MdidSdkHelper:" + clazz.getSimpleName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            tvInfo.setText("MdidSdkHelper:" + e.getMessage());
+        }
+
+//        tvInfo.setText(xInfo);
+//        System.out.println(Locale.getDefault().getCountry().toLowerCase());
+//        Log.d("xInfo",xInfo);
 //        tvInfo.setText("hasSimCard:"+SimCard.hasSimCard() + "\n hasIccCard:" + SimCard.hasIccCard() + "\nSimOperator:" + SimCard.getSimOperator() + "\nSimSerialNumber:"+ IDs.getSimSerialNumber());
 //        tvInfo.setText(SimCard.getGSMInfo().toString());
 //        tvInfo.setText(Build.getBuildInfo().toString());
@@ -72,11 +70,6 @@ public class MainActivity extends Activity {
     }
 
     public void uploadData(View view) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
-            @Override
-            public void run() {
-                Http.uploadData("kali", Build.MODEL + "_" + Build.VERSION.SDK_INT + "_DeviceInfo", CollectDeviceInfo.getDeviceInfo(), null);
-            }
-        });
+        DInfo.uploadDeviceInfo(this);
     }
 }
