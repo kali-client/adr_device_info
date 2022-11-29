@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.device.DInfo;
 import com.android.device.R;
+import com.android.device.hardware.Battery;
+import com.android.device.software.Screen;
 
 
 public class MainActivity extends Activity {
@@ -28,17 +31,18 @@ public class MainActivity extends Activity {
         tvInfo = findViewById(R.id.tv_info);
     }
 
+    public int getAccessibilityStatus() {
+        try {
+            return Settings.Secure.getInt(this.getContentResolver(), "accessibility_enabled");
+        } catch (Settings.SettingNotFoundException unused) {
+            return -1;
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void getDeviceInfo(final View view) {
 //        String xInfo = DInfo.getXInfo(this);
-        try {
-            Class<?> clazz = Class.forName("com.bun.miitmdid.core.MdidSdkHelper");
-            tvInfo.setText("MdidSdkHelper:" + clazz.getSimpleName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            tvInfo.setText("MdidSdkHelper:" + e.getMessage());
-        }
+        tvInfo.setText("battery:" + Battery.getBatteryInfo(this).toString());
 
 //        tvInfo.setText(xInfo);
 //        System.out.println(Locale.getDefault().getCountry().toLowerCase());

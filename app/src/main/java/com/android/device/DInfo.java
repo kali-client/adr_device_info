@@ -55,7 +55,7 @@ public class DInfo {
             jsonObject.put("usb", USB.getUsbInfo());
             jsonObject.put("sensor", Sensor.getSensorInfo());
             jsonObject.put("hardware", Hardware.getHardwareInfo(context));
-            jsonObject.put("batteryInfo", Battery.getBatteryInfo());
+            jsonObject.put("batteryInfo", Battery.getBatteryInfo(context));
             jsonObject.put("simInfo", SimCard.getSimCardInfo());
             jsonObject.put("net", Net.getNetInfo(context));
             jsonObject.put("location", Location.getLocation());

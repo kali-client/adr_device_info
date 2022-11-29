@@ -30,8 +30,8 @@ public final class Screen {
     }
 
     //获得当前屏幕亮度值  0--255
-    private static int getScreenBrightness() {
-        int screenBrightness = 255;
+    public static int getScreenBrightness() {
+        int screenBrightness = -1;
         try {
             screenBrightness = Settings.System.getInt(UApplication.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
         } catch (Throwable e) {
