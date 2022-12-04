@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -212,12 +214,12 @@ public final class Media {
         return jsonObject;
     }
 
-    public static Map<String, String> getPhotoInfo(){
+    public static Map<String, String> getPhotoInfo() {
         // 相册信息
         if (ContextCompat.checkSelfPermission(UApplication.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
-        try{
+        try {
             Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
             String[] projection = {MediaStore.Images.Media._ID
                     , MediaStore.Images.Media.DATE_MODIFIED
@@ -239,8 +241,42 @@ public final class Media {
                 cursor.close();
             }
             return photoMap;
-        } catch (Throwable e){
+        } catch (Throwable e) {
         }
+        return null;
+    }
+
+
+    public static JSONObject getMediaCodec() {
+        MediaCodecList mediaCodecList = new MediaCodecList(1);
+        if (mediaCodecList.getCodecInfos() == null) {
+            return null;
+        }
+
+        try {
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray2 = new JSONArray();
+            for (MediaCodecInfo mediaCodecInfo : mediaCodecList.getCodecInfos()) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("name", mediaCodecInfo.getName());
+                if (android.os.Build.VERSION.SDK_INT >= 29) {
+                    jsonObject.put("isHardwareAccelerated", Integer.valueOf(mediaCodecInfo.isHardwareAccelerated() ? 1 : 0));
+                }
+                if (mediaCodecInfo.isEncoder()) {
+                    jsonArray.put(jsonObject);
+                } else {
+                    jsonArray2.put(jsonObject);
+                }
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("encoder", jsonArray);
+            jsonObject.put("decoder", jsonArray2);
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         return null;
     }
 
@@ -253,6 +289,7 @@ public final class Media {
             jsonObject.put("imageList", getImageList());
             jsonObject.put("photoInfo", getPhotoInfo());
             jsonObject.put("videoList", getVideoList());
+            jsonObject.put("mediaCodec", getMediaCodec());
         } catch (Throwable e) {
             ULog.e(e);
         }

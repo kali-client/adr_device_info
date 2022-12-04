@@ -4,11 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.android.assemble.CollectDeviceInfo;
 import com.android.device.comm.Location;
 import com.android.device.comm.Net;
 import com.android.device.comm.SimCard;
-import com.android.device.env.Checker;
+import com.android.device.env.HackChecker;
 import com.android.device.ext.XhsInfo;
 import com.android.device.hardware.Battery;
 import com.android.device.hardware.Hardware;
@@ -60,7 +59,7 @@ public class DInfo {
             jsonObject.put("net", Net.getNetInfo(context));
             jsonObject.put("location", Location.getLocation());
             jsonObject.put("xhs", XhsInfo.getXInfo(context));
-            jsonObject.put("checker", Checker.getEnvCheckerInfo());
+            jsonObject.put("checker", HackChecker.getEnvCheckerInfo());
             return jsonObject.toString();//镜像 账号 ip 后台
         } catch (Exception e) {
             e.printStackTrace();

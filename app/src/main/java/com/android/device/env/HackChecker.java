@@ -25,7 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Checker {
+public class HackChecker {
 
     public static boolean isEmulator() {
         int suspectCount = 0;

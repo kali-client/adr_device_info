@@ -13,7 +13,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.device.DInfo;
 import com.android.device.R;
+import com.android.device.env.ServiceChecker;
 import com.android.device.hardware.Battery;
+import com.android.device.software.Media;
 import com.android.device.software.Screen;
 
 
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void getDeviceInfo(final View view) {
 //        String xInfo = DInfo.getXInfo(this);
-        tvInfo.setText("battery:" + Battery.getBatteryInfo(this).toString());
+        tvInfo.setText("serviceList:" + ServiceChecker.getServiceList());
 
 //        tvInfo.setText(xInfo);
 //        System.out.println(Locale.getDefault().getCountry().toLowerCase());

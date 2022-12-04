@@ -105,22 +105,14 @@ public final class Cmd {
             InputStream inputStream = process.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader reader = new BufferedReader(inputStreamReader);
-            String currentLine = null;
-            int count = 0;
+            String currentLine;
             while ((currentLine = reader.readLine()) != null) {
-                if (count > 50) {
-                    break;
-                }
                 sb.append(currentLine);
-                sb.append("\n");
-                count++;
             }
             IO.close(reader);
             IO.close(inputStreamReader);
             IO.close(inputStream);
-            if (process != null) {
-                process.destroy();
-            }
+            process.destroy();
             return sb.toString();
         } catch (Exception e) {
             ULog.e(e);
